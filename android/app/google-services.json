@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "398416302514",
+    "project_id": "powstikecommercedemo",
+    "storage_bucket": "powstikecommercedemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398416302514:android:0644dd2cf3a68bfb6114ab",
+        "android_client_info": {
+          "package_name": "com.example.powstik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398416302514-dkh0dh40au0rakjdiaj784a60ig4r7ln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApUHIBGMrFh4bClYRk-Jac_pW4sUHhRlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398416302514-dkh0dh40au0rakjdiaj784a60ig4r7ln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
