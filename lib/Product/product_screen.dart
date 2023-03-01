@@ -1,18 +1,50 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badges;
+import 'package:powstik/cart.dart';
 import 'productList.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ProductListScreen extends StatelessWidget {
+class ProductListScreen extends StatefulWidget {
+  const ProductListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends State<ProductListScreen> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  CollectionReference products =
+      FirebaseFirestore.instance.collection('products');
+
+  Future<void> addUser(int prId, String prName, double prPrice, String img) {
+    // Call the user's CollectionReference to add a new user
+    return products
+        .add({
+          'productId': prId,
+          'productName': prName,
+          'productPrice': prPrice,
+          'img': img,
+        })
+        .then((value) => print("Product Added"))
+        .catchError((error) => print("Failed to add product: $error"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Products"),
+        automaticallyImplyLeading: false,
         actions: [
           Center(
-            child: badges.Badge(
-              badgeContent: Text("0", style: TextStyle(color: Colors.white)),
+            child: GestureDetector(
               child: Icon(Icons.shopping_bag_outlined),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Cart();
+                }));
+              },
             ),
           ),
           SizedBox(width: 20),
@@ -22,7 +54,7 @@ class ProductListScreen extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-                itemCount: 3,
+                itemCount: 7,
                 itemBuilder: (context, index) {
                   return Card(
                     child: Padding(
@@ -57,14 +89,39 @@ class ProductListScreen extends StatelessWidget {
                                         (Product.products[index].price)
                                             .toString()),
                                     Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 5),
-                                        padding: EdgeInsets.all(10),
-                                        color: Colors.green,
-                                        child: Text(
-                                          "Add To Cart",
-                                          style: TextStyle(color: Colors.white),
+                                      // alignment: Alignment.,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          addUser(
+                                            Product.products[index].productId,
+                                            Product.products[index].name,
+                                            Product.products[index].price,
+                                            Product.products[index].imageUrl,
+                                          );
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return Cart();
+                                          }));
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(top: 5),
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: Colors.orange,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Add To Cart",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -78,6 +135,30 @@ class ProductListScreen extends StatelessWidget {
                     ),
                   );
                 }),
+          ),
+          GestureDetector(
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pop(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.black,
+              ),
+              margin: EdgeInsets.all(20),
+              height: 50,
+              width: double.infinity,
+              child: Center(
+                child: Text(
+                  'Sign Out',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
           ),
         ],
       ),
